@@ -1,0 +1,14 @@
+# Ambiente virtual
+venv/
+
+# Arquivos de zona (Windows / downloads)
+*:Zone.Identifier
+*.Zone.Identifier
+
+# Lixo comum (opcional)
+__pycache__/
+*.pyc
+*.pyo
+*.log
+*.db
+*.sqlite

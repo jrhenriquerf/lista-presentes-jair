@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🎁 Lista de Presentes</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0e0e0e;--card:#161616;--card2:#1c1c1c;--accent:#e8c96e;--accent2:#f0a04b;--text:#f0ece4;--muted:#888;--border:#2a2a2a;--r:16px}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min-height:100vh;overflow-x:hidden}
+.hero{position:relative;text-align:center;padding:80px 20px 60px;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% 0%,rgba(232,201,110,.15) 0%,transparent 70%);pointer-events:none}
+.hero-tag{display:inline-block;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#0e0e0e;font-size:11px;font-weight:700;letter-spacing:3px;text-transform:uppercase;padding:6px 18px;border-radius:100px;margin-bottom:24px}
+.hero h1{font-family:'Playfair Display',serif;font-size:clamp(42px,8vw,88px);font-weight:900;line-height:1;letter-spacing:-2px;background:linear-gradient(135deg,#fff 30%,var(--accent) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:16px}
+.hero p{color:var(--muted);font-size:16px;font-weight:300;max-width:480px;margin:0 auto;line-height:1.6}
+.hero-line{width:60px;height:2px;background:linear-gradient(90deg,var(--accent),var(--accent2));margin:32px auto 0;border-radius:2px}
+.container{max-width:1200px;margin:0 auto;padding:0 20px 80px}
+.section-label{font-size:11px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--accent);margin-bottom:28px;display:flex;align-items:center;gap:12px}
+.section-label::after{content:'';flex:1;height:1px;background:var(--border)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px;margin-bottom:60px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;transition:transform .25s,border-color .25s,box-shadow .25s;position:relative}
+.card:hover{transform:translateY(-4px);border-color:rgba(232,201,110,.35);box-shadow:0 20px 60px rgba(0,0,0,.5),0 0 0 1px rgba(232,201,110,.1)}
+.card.has-link{cursor:pointer}
+.card-img-wrap{width:100%;height:200px;background:var(--card2);display:flex;align-items:center;justify-content:center;overflow:hidden}
+.card-img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .4s}
+.card:hover .card-img{transform:scale(1.05)}
+.card-body{padding:18px}
+.card-number{font-size:10px;font-weight:700;letter-spacing:2px;color:var(--accent);margin-bottom:6px;text-transform:uppercase}
+.card-title{font-family:'Playfair Display',serif;font-size:18px;font-weight:700;line-height:1.3;margin-bottom:6px;color:var(--text)}
+.card-detail{font-size:13px;color:var(--muted);margin-bottom:14px;line-height:1.5}
+.card-links{display:flex;flex-wrap:wrap;gap:8px}
+.card-link{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:var(--accent);text-decoration:none;letter-spacing:.5px;padding:7px 12px;border:1px solid rgba(232,201,110,.3);border-radius:8px;transition:background .2s,border-color .2s}
+.card-link:hover{background:rgba(232,201,110,.1);border-color:var(--accent)}
+.card-link.alt{color:#4fc3f7;border-color:rgba(79,195,247,.3)}
+.card-link.alt:hover{background:rgba(79,195,247,.08);border-color:#4fc3f7}
+.card-link svg{width:12px;height:12px;flex-shrink:0}
+.pix-section{background:var(--card);border:1px solid var(--border);border-radius:24px;padding:48px 40px;text-align:center;position:relative;overflow:hidden;margin-top:20px}
+.pix-section::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 50% at 50% 100%,rgba(232,201,110,.08) 0%,transparent 70%);pointer-events:none}
+.pix-icon{font-size:48px;margin-bottom:16px;display:block}
+.pix-section h2{font-family:'Playfair Display',serif;font-size:28px;font-weight:700;margin-bottom:8px}
+.pix-section>p{color:var(--muted);font-size:14px;margin-bottom:32px}
+.pix-box{display:inline-flex;align-items:center;gap:16px;background:var(--card2);border:1px solid var(--border);border-radius:14px;padding:20px 28px}
+.pix-label{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--accent);display:block;text-align:left;margin-bottom:4px}
+.pix-key{font-size:20px;font-weight:500;letter-spacing:1px;color:var(--text);display:block;text-align:left}
+.copy-btn{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#0e0e0e;border:none;border-radius:10px;padding:12px 20px;font-size:13px;font-weight:700;cursor:pointer;letter-spacing:.5px;transition:opacity .2s,transform .15s;white-space:nowrap;font-family:'DM Sans',sans-serif}
+.copy-btn:hover{opacity:.9;transform:scale(1.03)}
+.copied-toast{position:fixed;bottom:32px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--accent);color:#0e0e0e;padding:12px 28px;border-radius:100px;font-weight:700;font-size:14px;opacity:0;pointer-events:none;transition:all .3s;z-index:100}
+.copied-toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.footer{text-align:center;padding:40px 20px;border-top:1px solid var(--border);color:var(--muted);font-size:13px}
+.footer span{color:var(--accent)}
+@keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+.hero{animation:fadeUp .7s ease both}
+.card{animation:fadeUp .5s ease both}
+@media(max-width:600px){.pix-box{flex-direction:column;gap:12px}.pix-label,.pix-key{text-align:center}.grid{grid-template-columns:1fr 1fr}}
+@media(max-width:400px){.grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="hero">
+  <div class="hero-tag">🎂 Lista de Presentes</div>
+  <h1>Ótimas opções de presentes<br>para o Jair</h1>
+  <p>Escolha o que preferir — qualquer coisa já vai me deixar super feliz! 🎉</p>
+  <div class="hero-line"></div>
+</div>
+<div class="container">
+
+<div class="section-label">Esporte &amp; Treino</div>
+<div class="grid">
+<div class="card has-link" onclick="window.open('https://www.mercadolivre.com.br/oculos-nataco-espelhado-hammerhead-olympic-mirror-fogfend-cor-dourado/p/MLB50808893','_blank')"><div class="card-img-wrap"><img data-img="oculos.webp" src="" class="card-img" alt="Kit Natação"></div><div class="card-body"><div class="card-number">01</div><div class="card-title">Kit Natação</div><div class="card-detail">Óculos + Touca de silicone</div><div class="card-links"><a class="card-link" href="https://www.mercadolivre.com.br/oculos-nataco-espelhado-hammerhead-olympic-mirror-fogfend-cor-dourado/p/MLB50808893" target="_blank" onclick="event.stopPropagation()">Mercado Livre <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 10L10 2M5 2h5v5"/></svg></a><a class="card-link alt" href="https://br.shp.ee/kbybuUqc" target="_blank" onclick="event.stopPropagation()">Shopee <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 10L10 2M5 2h5v5"/></svg></a></div></div></div>
+<div class="card"><div class="card-img-wrap"><img data-img="luva.webp" src="" class="card-img" alt="Luva de Boxe"></div><div class="card-body"><div class="card-number">02</div><div class="card-title">Luva de Boxe</div><div class="card-detail">Adidas Hybrid 80 ou Maximum Easy · Tam. 12 ou 14</div><div class="card-links"><a class="card-link" href="https://produto.mercadolivre.com.br/MLB-2932908455-luva-de-boxe-muay-thai-adidas-hybrid-80-black-black-_JM" target="_blank">Adidas Hybrid 80 <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 10L10 2M5 2h5v5"/></svg></a><a class="card-link alt" href="https://www.mercadolivre.com.br/luva-maximum-easy-newclassic-boxe-muay-thai-kickboxing-preto-tamanho-14oz-resistente/p/MLB60101786" target="_blank">Maximum Easy <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 10L10 2M5 2h5v5"/></svg></a></div></div></div>
+<div class="card"><div class="card-img-wrap"><img data-img="tenis_de_corrida.jpg" src="" class="card-img" alt="Tênis de Corrida"></div><div class="card-body"><div class="card-number">03</div><div class="card-title">Tênis de Corrida</div><div class="card-detail">Número 42</div></div></div>
+<div class="card"><div class="card-img-wrap"><img data-img="tenis_casual.jpg" src="" class="card-img" alt="Tênis Casual"></div><div class="card-body"><div class="card-number">04</div><div class="card-title">Tênis Casual</div><div class="card-detail">Número 42 · Para o dia a dia</div></div></div>
+<div class="card"><div class="card-img-wrap"><img data-img="short_de_treino.jpg" src="" class="card-img" alt="Short de Treino"></div><div class="card-body"><div class="card-number">05</div><div class="card-title">Short de Treino</div><div class="card-detail">Tamanho G · Leve e respirável</div></div></div>
+<div class="card has-link" onclick="window.open('https://www.mercadolivre.com.br/kit-super-band-4-intensidades-odin-fit-elasticos-power-band-treino/p/MLB28706883','_blank')"><div class="card-img-wrap"><img data-img="super-band.webp" src="" class="card-img" alt="Super Band"></div><div class="card-body"><div class="card-number">06</div><div class="card-title">Super Band</div><div class="card-detail">Kit 4 intensidades · Odin Fit</div><div class="card-links"><a class="card-link" href="https://www.mercadolivre.com.br/kit-super-band-4-intensidades-odin-fit-elasticos-power-band-treino/p/MLB28706883" target="_blank" onclick="event.stopPropagation()">Mercado Livre <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 10L10 2M5 2h5v5"/></svg></a></div></div></div>
+<div class="card"><div class="card-img-wrap"><img data-img="bicicleta.jpg" src="" class="card-img" alt="Bicicleta"></div><div class="card-body"><div class="card-number">07</div><div class="card-title">Bicicleta</div><div class="card-detail">Adoraria pedalar por aí!</div></div></div>
+</div>
+
+<div class="section-label">Roupas &amp; Dia a Dia</div>
+<div class="grid">
+<div class="card"><div class="card-img-wrap"><img data-img="bermuda___short.jpg" src="" class="card-img" alt="Bermuda / Short"></div><div class="card-body"><div class="card-number">08</div><div class="card-title">Bermuda / Short</div><div class="card-detail">Para sair · Tamanho G</div></div></div>
+<div class="card has-link" onclick="window.open('https://produto.mercadolivre.com.br/MLB-2222397098-daily-t-shirt-insider-_JM','_blank')"><div class="card-img-wrap"><img data-img="t-shirt-insider.webp" src="" class="card-img" alt="Camiseta Insider"></div><div class="card-body"><div class="card-number">09</div><div class="card-title">Camiseta Insider</div><div class="card-detail">Ou algodão peruano C&amp;A · Tamanho G</div><div class="card-links"><a class="card-link" href="https://produto.mercadolivre.com.br/MLB-2222397098-daily-t-shirt-insider-_JM" target="_blank" onclick="event.stopPropagation()">Daily T-shirt <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 10L10 2M5 2h5v5"/></svg></a><a class="card-link alt" href="https://www.mercadolivre.com.br/camiseta-insider-tech-tshirt-masculina-adulto/up/MLBU3757103431" target="_blank" onclick="event.stopPropagation()">Tech T-shirt <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 10L10 2M5 2h5v5"/></svg></a></div></div></div>
+<div class="card"><div class="card-img-wrap"><img data-img="meias.jpg" src="" class="card-img" alt="Meias"></div><div class="card-body"><div class="card-number">10</div><div class="card-title">Meias</div><div class="card-detail">Kit sempre bem-vindo!</div></div></div>
+<div class="card"><div class="card-img-wrap"><img data-img="cuecas.jpg" src="" class="card-img" alt="Cuecas"></div><div class="card-body"><div class="card-number">11</div><div class="card-title">Cuecas</div><div class="card-detail">Tamanho G · Quanto mais, melhor!</div></div></div>
+<div class="card"><div class="card-img-wrap"><img data-img="pijama.jpg" src="" class="card-img" alt="Pijama"></div><div class="card-body"><div class="card-number">12</div><div class="card-title">Pijama</div><div class="card-detail">Tamanho G · Conforto total</div></div></div>
+<div class="card"><div class="card-img-wrap"><img data-img="chinelo_confortavel.jpg" src="" class="card-img" alt="Chinelo Confortável"></div><div class="card-body"><div class="card-number">13</div><div class="card-title">Chinelo Confortável</div><div class="card-detail">Daqueles que salvam o dia</div></div></div>
+<div class="card"><div class="card-img-wrap"><img data-img="creme_hidratante.jpg" src="" class="card-img" alt="Creme Hidratante"></div><div class="card-body"><div class="card-number">14</div><div class="card-title">Creme Hidratante</div><div class="card-detail">Mãos, cotovelos e tornozelos</div></div></div>
+<div class="card"><div class="card-img-wrap"><img data-img="perfume.jpg" src="" class="card-img" alt="Perfume"></div><div class="card-body"><div class="card-number">15</div><div class="card-title">Perfume</div><div class="card-detail">Masculino · ZAAD, Ferrari black, Coffee, etc.</div></div></div>
+</div>
+
+<div class="section-label">Tecnologia</div>
+<div class="grid">
+<div class="card has-link" onclick="window.open('https://www.mercadolivre.com.br/teclado-mecnico-aula-f99-gamer-preto-e-cinza-com-contorno-rgb-sem-fio-wireless-tri-mode-bluetooth-50-24g-usb-hotswap-layout-96-compativel-pc-notebook-mac-ideal-para-jogos-e-trabalh/p/MLB64973154','_blank')"><div class="card-img-wrap"><img data-img="teclado.webp" src="" class="card-img" alt="Teclado Mecânico"></div><div class="card-body"><div class="card-number">16</div><div class="card-title">Teclado Mecânico</div><div class="card-detail">AULA F99 · Sem fio Tri-Mode · RGB · Hotswap</div><div class="card-links"><a class="card-link" href="https://www.mercadolivre.com.br/teclado-mecnico-aula-f99-gamer-preto-e-cinza-com-contorno-rgb-sem-fio-wireless-tri-mode-bluetooth-50-24g-usb-hotswap-layout-96-compativel-pc-notebook-mac-ideal-para-jogos-e-trabalh/p/MLB64973154" target="_blank" onclick="event.stopPropagation()">Mercado Livre <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 10L10 2M5 2h5v5"/></svg></a><a class="card-link alt" href="https://a.co/d/0hRoOJ27" target="_blank" onclick="event.stopPropagation()">Amazon <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 10L10 2M5 2h5v5"/></svg></a></div></div></div>
+<div class="card has-link" onclick="window.open('https://www.mercadolivre.com.br/mouse-gamer-sem-fio-logitech-g-pro-x-superlight-2-para-jogos/p/MLB28295187','_blank')"><div class="card-img-wrap"><img data-img="mouse.webp" src="" class="card-img" alt="Mouse Gamer"></div><div class="card-body"><div class="card-number">17</div><div class="card-title">Mouse Gamer</div><div class="card-detail">Logitech G Pro X Superlight 2 · Sem fio</div><div class="card-links"><a class="card-link" href="https://www.mercadolivre.com.br/mouse-gamer-sem-fio-logitech-g-pro-x-superlight-2-para-jogos/p/MLB28295187" target="_blank" onclick="event.stopPropagation()">Mercado Livre <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 10L10 2M5 2h5v5"/></svg></a></div></div></div>
+<div class="card"><div class="card-img-wrap"><img data-img="notebook_ou_desktop.jpg" src="" class="card-img" alt="Notebook ou Desktop"></div><div class="card-body"><div class="card-number">18</div><div class="card-title">Notebook ou Desktop</div><div class="card-detail">Para trabalho e diversão</div></div></div>
+<div class="card has-link" onclick="window.open('https://www.mercadolivre.com.br/controle-gamesir-cyclone-2-bundle-edition-dock-carregamento-para-pc-switch-ios-android-steam-celular-hall-effect-branco/p/MLB45861096','_blank')"><div class="card-img-wrap"><img data-img="controle.webp" src="" class="card-img" alt="Controle para PC"></div><div class="card-body"><div class="card-number">19</div><div class="card-title">Controle para PC</div><div class="card-detail">GameSir Cyclone 2 · PC, Switch, iOS, Android</div><div class="card-links"><a class="card-link" href="https://www.mercadolivre.com.br/controle-gamesir-cyclone-2-bundle-edition-dock-carregamento-para-pc-switch-ios-android-steam-celular-hall-effect-branco/p/MLB45861096" target="_blank" onclick="event.stopPropagation()">Mercado Livre <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 10L10 2M5 2h5v5"/></svg></a></div></div></div>
+<div class="card"><div class="card-img-wrap"><img data-img="ipad.jpg" src="" class="card-img" alt="iPad"></div><div class="card-body"><div class="card-number">20</div><div class="card-title">iPad</div><div class="card-detail"></div></div></div>
+<div class="card has-link" onclick="window.open('https://www.mercadolivre.com.br/suporte-de-braco-para-monitor-duplo-north-bayou-f160-17-a-27-cor-cinza-escuro/p/MLB39258231','_blank')"><div class="card-img-wrap"><img data-img="suporte-monitor.webp" src="" class="card-img" alt="Suporte Articulado"></div><div class="card-body"><div class="card-number">21</div><div class="card-title">Suporte Articulado</div><div class="card-detail">Monitor · North Bayou F160</div><div class="card-links"><a class="card-link" href="https://www.mercadolivre.com.br/suporte-de-braco-para-monitor-duplo-north-bayou-f160-17-a-27-cor-cinza-escuro/p/MLB39258231" target="_blank" onclick="event.stopPropagation()">Mercado Livre <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 10L10 2M5 2h5v5"/></svg></a></div></div></div>
+<div class="card has-link" onclick="window.open('https://www.mercadolivre.com.br/cmera-de-painel-de-3-canais-ddpai-z90-master-4k-para-carros/p/MLB2083649264','_blank')"><div class="card-img-wrap"><img data-img="camera-carro.webp" src="" class="card-img" alt="Câmera Veicular"></div><div class="card-body"><div class="card-number">22</div><div class="card-title">Câmera Veicular</div><div class="card-detail">DDPai Z90 Master 4K · 3 canais</div><div class="card-links"><a class="card-link" href="https://www.mercadolivre.com.br/cmera-de-painel-de-3-canais-ddpai-z90-master-4k-para-carros/p/MLB2083649264" target="_blank" onclick="event.stopPropagation()">Mercado Livre <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 10L10 2M5 2h5v5"/></svg></a></div></div></div>
+<div class="card has-link" onclick="window.open('https://www.mercadolivre.com.br/echo-show-8-smart-display-3-geracao-preta-amazon/up/MLBU3899897181','_blank')"><div class="card-img-wrap"><img data-img="echo-show-8.webp" src="" class="card-img" alt="Echo Show 8"></div><div class="card-body"><div class="card-number">23</div><div class="card-title">Echo Show 8</div><div class="card-detail">Amazon Alexa · Smart Display · 3ª Geração</div><div class="card-links"><a class="card-link" href="https://www.mercadolivre.com.br/echo-show-8-smart-display-3-geracao-preta-amazon/up/MLBU3899897181" target="_blank" onclick="event.stopPropagation()">Mercado Livre <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 10L10 2M5 2h5v5"/></svg></a></div></div></div>
+<div class="card"><div class="card-img-wrap"><img data-img="capinha_s24_ultra.jpg" src="" class="card-img" alt="Capinha S24 Ultra"></div><div class="card-body"><div class="card-number">24</div><div class="card-title">Capinha S24 Ultra</div><div class="card-detail">Samsung Galaxy S24 Ultra · Proteção e estilo</div></div></div>
+<div class="card has-link" onclick="window.open('https://www.mercadolivre.com.br/dreame-d10-plus-gen-2-rob-aspirador-e-mopa-com-base-127v-branco/p/MLB48904538','_blank')"><div class="card-img-wrap"><img data-img="aspirador-robo.webp" src="" class="card-img" alt="Aspirador Robô"></div><div class="card-body"><div class="card-number">25</div><div class="card-title">Aspirador Robô</div><div class="card-detail">Dreame D10 Plus Gen 2 · Aspira e passa mopa</div><div class="card-links"><a class="card-link" href="https://www.mercadolivre.com.br/dreame-d10-plus-gen-2-rob-aspirador-e-mopa-com-base-127v-branco/p/MLB48904538" target="_blank" onclick="event.stopPropagation()">Mercado Livre <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 10L10 2M5 2h5v5"/></svg></a></div></div></div>
+</div>
+
+<div class="section-label">Casa &amp; Lazer</div>
+<div class="grid">
+<div class="card"><div class="card-img-wrap"><img data-img="ar_condicionado.jpg" src="" class="card-img" alt="Ar Condicionado"></div><div class="card-body"><div class="card-number">26</div><div class="card-title">Ar Condicionado</div><div class="card-detail">Para a sala</div></div></div>
+<div class="card has-link" onclick="window.open('https://www.mercadolivre.com.br/smart-tv-tcl-55-polegadas-qled-mini-led-4k-c6k-wifi-bluetooth-google-tv-4-hdmi-144hz-hdr10-55c6k/p/MLB48808732','_blank')"><div class="card-img-wrap"><img data-img="TV.webp" src="" class="card-img" alt="TV Sala"></div><div class="card-body"><div class="card-number">27</div><div class="card-title">TV Sala</div><div class="card-detail">TCL 55&quot; QLED 4K Mini LED · 144Hz · Google TV</div><div class="card-links"><a class="card-link" href="https://www.mercadolivre.com.br/smart-tv-tcl-55-polegadas-qled-mini-led-4k-c6k-wifi-bluetooth-google-tv-4-hdmi-144hz-hdr10-55c6k/p/MLB48808732" target="_blank" onclick="event.stopPropagation()">Mercado Livre <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 10L10 2M5 2h5v5"/></svg></a></div></div></div>
+<div class="card"><div class="card-img-wrap"><img data-img="kit_churrasco.jpg" src="" class="card-img" alt="Kit Churrasco"></div><div class="card-body"><div class="card-number">28</div><div class="card-title">Kit Churrasco</div><div class="card-detail">Facas, pegadores e acessórios</div></div></div>
+<div class="card"><div class="card-img-wrap"><img data-img="panela_de_pedra.jpg" src="" class="card-img" alt="Panela de Pedra"></div><div class="card-body"><div class="card-number">29</div><div class="card-title">Panela de Pedra</div><div class="card-detail">Antiaderente · Durável e versátil</div></div></div>
+<div class="card"><div class="card-img-wrap"><img data-img="forma_de_silicone.jpg" src="" class="card-img" alt="Forma de Silicone"></div><div class="card-body"><div class="card-number">30</div><div class="card-title">Forma de Silicone</div><div class="card-detail">Ovos de Páscoa e trufas · Kit completo</div></div></div>
+</div>
+
+<div class="section-label">Pix</div>
+<div class="pix-section">
+  <span class="pix-icon">💸</span>
+  <h2>Prefere mandar um Pix?</h2>
+  <p>Também fica ótimo! Vou investir em algo da lista com muito carinho 🙏</p>
+  <div class="pix-box">
+    <div>
+      <span class="pix-label">CPF · Chave Pix</span>
+      <span class="pix-key" id="pixKey">456.611.108-39</span>
+    </div>
+    <button class="copy-btn" onclick="copyPix()">Copiar chave</button>
+  </div>
+</div>
+
+</div>
+<div class="footer">Feito com muito carinho 🎁 &nbsp;·&nbsp; <span>Obrigado por estar aqui!</span></div>
+<div class="copied-toast" id="toast">✓ Chave copiada!</div>
+<script>
+// ─────────────────────────────────────────────────────
+//  CONFIG — altere aqui para mudar o caminho das imagens
+//  Local:  './imagens/'
+//  Online: 'https://seusite.com/imagens/'
+// ─────────────────────────────────────────────────────
+const IMG_BASE_PATH = './imagens/';
+
+// Carrega imagens dinamicamente a partir do IMG_BASE_PATH
+document.querySelectorAll('img.card-img[data-img]').forEach(img => {
+  const file = img.getAttribute('data-img');
+  const url  = IMG_BASE_PATH + file;
+  img.src    = url;
+  img.onerror = function() {
+    // Se imagem não carregar, esconde e mostra o SVG fallback
+    this.style.display = 'none';
+    const wrap = this.parentElement;
+    if (!wrap.querySelector('.card-emoji')) {
+      const span = document.createElement('span');
+      span.className = 'card-emoji';
+      span.textContent = '🎁';
+      wrap.appendChild(span);
+    }
+  };
+});
+
+function copyPix(){
+  const k=document.getElementById('pixKey').textContent;
+  navigator.clipboard.writeText(k).catch(()=>{const t=document.createElement('textarea');t.value=k;document.body.appendChild(t);t.select();document.execCommand('copy');document.body.removeChild(t)});
+  const t=document.getElementById('toast');t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2500);
+}
+</script>
+</body>
+</html>

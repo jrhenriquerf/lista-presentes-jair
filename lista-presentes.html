@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🎁 Lista de Presentes</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0e0e0e;--card:#161616;--card2:#1c1c1c;--accent:#e8c96e;--accent2:#f0a04b;--text:#f0ece4;--muted:#888;--border:#2a2a2a;--r:16px}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min-height:100vh;overflow-x:hidden}
+
+/* HERO */
+.hero{position:relative;text-align:center;padding:80px 20px 48px;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% 0%,rgba(232,201,110,.15) 0%,transparent 70%);pointer-events:none}
+.hero-tag{display:inline-block;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#0e0e0e;font-size:11px;font-weight:700;letter-spacing:3px;text-transform:uppercase;padding:6px 18px;border-radius:100px;margin-bottom:24px}
+.hero h1{font-family:'Playfair Display',serif;font-size:clamp(36px,7vw,80px);font-weight:900;line-height:1.05;letter-spacing:-2px;background:linear-gradient(135deg,#fff 30%,var(--accent) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:16px}
+.hero p{color:var(--muted);font-size:16px;font-weight:300;max-width:480px;margin:0 auto;line-height:1.6}
+.hero-line{width:60px;height:2px;background:linear-gradient(90deg,var(--accent),var(--accent2));margin:28px auto 0;border-radius:2px}
+
+/* STATS BAR */
+.stats-bar{display:flex;justify-content:center;gap:32px;padding:28px 20px;flex-wrap:wrap}
+.stat{text-align:center}
+.stat-value{font-family:'Playfair Display',serif;font-size:26px;font-weight:700;color:var(--accent);line-height:1}
+.stat-label{font-size:11px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-top:4px}
+
+/* FILTERS */
+.filters-wrap{max-width:1200px;margin:0 auto;padding:0 20px 40px}
+.filters-row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:12px}
+.filter-btn{background:var(--card);border:1px solid var(--border);color:var(--muted);font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;letter-spacing:.5px;padding:8px 16px;border-radius:100px;cursor:pointer;transition:all .2s;white-space:nowrap}
+.filter-btn:hover{border-color:var(--accent);color:var(--accent)}
+.filter-btn.active{background:var(--accent);border-color:var(--accent);color:#0e0e0e}
+.filter-label{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-right:4px}
+.search-input{background:var(--card);border:1px solid var(--border);color:var(--text);font-family:'DM Sans',sans-serif;font-size:13px;padding:8px 16px;border-radius:100px;outline:none;width:220px;transition:border-color .2s}
+.search-input::placeholder{color:var(--muted)}
+.search-input:focus{border-color:var(--accent)}
+.results-count{font-size:12px;color:var(--muted);padding:0 20px 8px;max-width:1200px;margin:0 auto}
+
+/* CONTAINER */
+.container{max-width:1200px;margin:0 auto;padding:0 20px 80px}
+.section-wrap{margin-bottom:8px}
+.section-label{font-size:11px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--accent);margin-bottom:20px;display:flex;align-items:center;gap:12px}
+.section-label::after{content:'';flex:1;height:1px;background:var(--border)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px;margin-bottom:48px}
+
+/* CARDS */
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;transition:transform .25s,border-color .25s,box-shadow .25s;position:relative}
+.card:hover{transform:translateY(-4px);border-color:rgba(232,201,110,.35);box-shadow:0 20px 60px rgba(0,0,0,.5),0 0 0 1px rgba(232,201,110,.1)}
+.card.has-link{cursor:pointer}
+.card.hidden{display:none}
+
+/* PRICE BADGE */
+.price-badge{position:absolute;top:12px;right:12px;background:rgba(14,14,14,.75);backdrop-filter:blur(8px);border:1px solid var(--border);border-radius:100px;padding:4px 10px;font-size:11px;font-weight:700;color:var(--accent);letter-spacing:.5px;z-index:2;white-space:nowrap}
+
+/* BOUGHT BADGE */
+.bought-badge{position:absolute;top:12px;left:12px;background:rgba(0,0,0,.55);backdrop-filter:blur(8px);border:1px solid rgba(64,199,129,.35);color:#40c781;border-radius:100px;padding:4px 10px;font-size:11px;font-weight:800;letter-spacing:.3px;z-index:3;white-space:nowrap}
+.card.bought{opacity:.72}
+.card.bought .card-img{filter:grayscale(1) brightness(.9);opacity:.65;transform:none}
+.card.bought .card-title,
+.card.bought .card-detail,
+.card.bought .card-links{opacity:.9}
+.card.bought:hover{transform:none;border-color:var(--border);box-shadow:none}
+
+/* IMAGE AREA */
+.card-img-wrap{width:100%;height:200px;background:var(--card2);display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative}
+.card-img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .4s}
+.card:hover .card-img{transform:scale(1.05)}
+.card-svg-fallback{width:100%;height:100%;display:flex;align-items:center;justify-content:center}
+
+/* BODY */
+.card-body{padding:18px}
+.card-number{font-size:10px;font-weight:700;letter-spacing:2px;color:var(--accent);margin-bottom:6px;text-transform:uppercase}
+.card-title{font-family:'Playfair Display',serif;font-size:18px;font-weight:700;line-height:1.3;margin-bottom:4px;color:var(--text)}
+.card-detail{font-size:13px;color:var(--muted);margin-bottom:14px;line-height:1.5}
+.card-price{font-size:12px;color:var(--accent);font-weight:600;margin-bottom:12px;opacity:.8}
+.card-links{display:flex;flex-wrap:wrap;gap:8px}
+.card-link{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:var(--accent);text-decoration:none;letter-spacing:.5px;padding:7px 12px;border:1px solid rgba(232,201,110,.3);border-radius:8px;transition:background .2s,border-color .2s}
+.card-link:hover{background:rgba(232,201,110,.1);border-color:var(--accent)}
+.card-link.alt{color:#4fc3f7;border-color:rgba(79,195,247,.3)}
+.card-link.alt:hover{background:rgba(79,195,247,.08);border-color:#4fc3f7}
+.card-link svg{width:12px;height:12px;flex-shrink:0}
+
+/* EMPTY STATE */
+.empty-state{text-align:center;padding:60px 20px;color:var(--muted);display:none}
+.empty-state.show{display:block}
+.empty-state p{font-size:16px;margin-top:12px}
+
+/* PIX */
+.pix-section{background:var(--card);border:1px solid var(--border);border-radius:24px;padding:48px 40px;text-align:center;position:relative;overflow:hidden;margin-top:20px}
+.pix-section::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 50% at 50% 100%,rgba(232,201,110,.08) 0%,transparent 70%);pointer-events:none}
+.pix-icon{font-size:48px;margin-bottom:16px;display:block}
+.pix-section h2{font-family:'Playfair Display',serif;font-size:28px;font-weight:700;margin-bottom:8px}
+.pix-section>p{color:var(--muted);font-size:14px;margin-bottom:32px}
+.pix-box{display:inline-flex;align-items:center;gap:16px;background:var(--card2);border:1px solid var(--border);border-radius:14px;padding:20px 28px}
+.pix-label{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--accent);display:block;text-align:left;margin-bottom:4px}
+.pix-key{font-size:20px;font-weight:500;letter-spacing:1px;color:var(--text);display:block;text-align:left}
+.copy-btn{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#0e0e0e;border:none;border-radius:10px;padding:12px 20px;font-size:13px;font-weight:700;cursor:pointer;letter-spacing:.5px;transition:opacity .2s,transform .15s;white-space:nowrap;font-family:'DM Sans',sans-serif}
+.copy-btn:hover{opacity:.9;transform:scale(1.03)}
+.copied-toast{position:fixed;bottom:32px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--accent);color:#0e0e0e;padding:12px 28px;border-radius:100px;font-weight:700;font-size:14px;opacity:0;pointer-events:none;transition:all .3s;z-index:100}
+.copied-toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.footer{text-align:center;padding:40px 20px;border-top:1px solid var(--border);color:var(--muted);font-size:13px}
+.footer span{color:var(--accent)}
+@keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+.hero{animation:fadeUp .7s ease both}
+.card{animation:fadeUp .5s ease both}
+@media(max-width:600px){.pix-box{flex-direction:column;gap:12px}.pix-label,.pix-key{text-align:center}.grid{grid-template-columns:1fr 1fr}.stats-bar{gap:20px}}
+@media(max-width:400px){.grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-tag">🎂 Lista de Presentes</div>
+  <h1>Ótimas opções de presentes<br>para o Jair</h1>
+  <p>Escolha o que preferir — qualquer coisa já vai me deixar super feliz! 🎉</p>
+  <div class="hero-line"></div>
+</div>
+
+<!-- STATS -->
+<div class="stats-bar" id="statsBar">
+  <div class="stat"><div class="stat-value" id="statTotal">30</div><div class="stat-label">Itens</div></div>
+  <div class="stat"><div class="stat-value" id="statMin">—</div><div class="stat-label">A partir de</div></div>
+  <div class="stat"><div class="stat-value" id="statAvg">—</div><div class="stat-label">Média</div></div>
+  <div class="stat"><div class="stat-value" id="statMax">—</div><div class="stat-label">Até</div></div>
+</div>
+
+<!-- FILTERS -->
+<div class="filters-wrap">
+  <div class="filters-row">
+    <span class="filter-label">Categoria</span>
+    <button class="filter-btn active" data-cat="all">Todos</button>
+    <button class="filter-btn" data-cat="esporte">Esporte</button>
+    <button class="filter-btn" data-cat="roupas">Roupas</button>
+    <button class="filter-btn" data-cat="tech">Tecnologia</button>
+    <button class="filter-btn" data-cat="casa">Casa</button>
+  </div>
+  <div class="filters-row">
+    <span class="filter-label">Faixa de valor</span>
+    <button class="filter-btn active" data-price="all">Todos</button>
+    <button class="filter-btn" data-price="0-100">Até R$ 100</button>
+    <button class="filter-btn" data-price="100-300">R$ 100 – 300</button>
+    <button class="filter-btn" data-price="300-1000">R$ 300 – 1.000</button>
+    <button class="filter-btn" data-price="1000+">Acima de R$ 1.000</button>
+    <input class="search-input" type="text" id="searchInput" placeholder="🔍  Buscar presente...">
+  </div>
+  <div class="filters-row">
+    <span class="filter-label">Status</span>
+    <button class="filter-btn active" data-bought="all">Todos</button>
+    <button class="filter-btn" data-bought="not">Não comprados</button>
+  </div>
+</div>
+<div class="results-count" id="resultsCount"></div>
+
+<div class="container" id="mainContainer">
+
+<!-- ══ ESPORTE & TREINO ══ -->
+<div class="section-wrap" data-section="esporte">
+<div class="section-label">Esporte &amp; Treino</div>
+<div class="grid">
+
+<div class="card has-link" data-cat="esporte" data-price="100" onclick="window.open('https://www.mercadolivre.com.br/oculos-nataco-espelhado-hammerhead-olympic-mirror-fogfend-cor-dourado/p/MLB50808893','_blank')">
+  <span class="price-badge">~R$ 100</span>
+  <div class="card-img-wrap"><img data-img="oculos.webp" class="card-img" alt="Kit Natação" onerror="var f=this.nextElementSibling;if(f){this.style.display='none';f.style.display='flex';}this.onerror=null"><div class="card-svg-fallback" style="display:none"><svg viewBox="0 0 80 80" width="80" height="80" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="22" cy="40" r="14" stroke="#00b4d8" stroke-width="3"/><circle cx="58" cy="40" r="14" stroke="#00b4d8" stroke-width="3"/><path d="M36 40h8" stroke="#00b4d8" stroke-width="3" stroke-linecap="round"/><path d="M8 40c0-4 3-6 6-6" stroke="#00b4d8" stroke-width="3" stroke-linecap="round"/><path d="M72 40c0-4-3-6-6-6" stroke="#00b4d8" stroke-width="3" stroke-linecap="round"/><ellipse cx="40" cy="26" rx="18" ry="5" stroke="#0077b6" stroke-width="2" stroke-dasharray="4 3"/></svg></div></div>
+  <div class="card-body"><div class="card-number">01</div><div class="card-title">Kit Natação</div><div class="card-detail">Óculos + Touca de silicone</div><div class="card-links"><a class="card-link" href="https://www.mercadolivre.com.br/oculos-nataco-espelhado-hammerhead-olympic-mirror-fogfend-cor-dourado/p/MLB50808893" target="_blank" onclick="event.stopPropagation()">Mercado Livre <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 10L10 2M5 2h5v5"/></svg></a><a class="card-link alt" href="https://br.shp.ee/kbybuUqc" target="_blank" onclick="event.stopPropagation()">Shopee <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 10L10 2M5 2h5v5"/></svg></a></div></div>
+</div>
+
+<div class="card" data-cat="esporte" data-price="200">
+  <span class="price-badge">~R$ 200</span>
+  <div class="card-img-wrap"><img data-img="luva.webp" class="card-img" alt="Luva de Boxe" onerror="var f=this.nextElementSibling;if(f){this.style.display='none';f.style.display='flex';}this.onerror=null"><div class="card-svg-fallback" style="display:none"><svg viewBox="0 0 80 80" width="80" height="80" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="20" y="20" width="40" height="46" rx="20" fill="#e63946" opacity=".18"/><rect x="24" y="24" width="32" height="38" rx="16" stroke="#e63946" stroke-width="3"/><path d="M24 44h32" stroke="#c1121f" stroke-width="2" stroke-linecap="round"/><rect x="20" y="52" width="40" height="10" rx="5" fill="#c1121f" opacity=".5"/></svg></div></div>
+  <div class="card-body"><div class="card-number">02</div><div class="card-title">Luva de Boxe</div><div class="card-detail">Adidas Hybrid 80 ou Maximum Easy · Tam. 12 ou 14</div><div class="card-links"><a class="card-link" href="https://produto.mercadolivre.com.br/MLB-2932908455-luva-de-boxe-muay-thai-adidas-hybrid-80-black-black-_JM" target="_blank">Adidas Hybrid 80 <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 10L10 2M5 2h5v5"/></svg></a><a class="card-link alt" href="https://www.mercadolivre.com.br/luva-maximum-easy-newclassic-boxe-muay-thai-kickboxing-preto-tamanho-14oz-resistente/p/MLB60101786" target="_blank">Maximum Easy <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 10L10 2M5 2h5v5"/></svg></a></div></div>
+</div>
+
+<div class="card" data-cat="esporte" data-price="400">
+  <span class="price-badge">~R$ 400</span>
+  <div class="card-img-wrap"><img data-img="tenis_de_corrida.jpg" class="card-img" alt="Tênis de Corrida" onerror="var f=this.nextElementSibling;if(f){this.style.display='none';f.style.display='flex';}this.onerror=null"><div class="card-svg-fallback" style="display:none"><svg viewBox="0 0 80 80" width="80" height="80" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 52 Q20 30 40 34 Q55 36 72 48" stroke="#f77f00" stroke-width="4" stroke-linecap="round" fill="none"/><ellipse cx="40" cy="52" rx="32" ry="8" fill="#d62828" opacity=".15"/><path d="M16 46 Q28 38 42 40" stroke="#f77f00" stroke-width="2" opacity=".6" stroke-linecap="round"/><circle cx="58" cy="44" r="4" fill="#f77f00" opacity=".4"/></svg></div></div>
+  <div class="card-body"><div class="card-number">03</div><div class="card-title">Tênis de Corrida</div><div class="card-detail">Número 42</div></div>
+</div>
+
+<div class="card" data-cat="esporte" data-price="350">
+  <span class="price-badge">~R$ 350</span>
+  <div class="card-img-wrap"><img data-img="tenis_casual.jpg" class="card-img" alt="Tênis Casual" onerror="var f=this.nextElementSibling;if(f){this.style.display='none';f.style.display='flex';}this.onerror=null"><div class="card-svg-fallback" style="display:none"><svg viewBox="0 0 80 80" width="80" height="80" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 52 Q22 34 44 36 Q58 37 72 50" stroke="#4cc9f0" stroke-width="4" stroke-linecap="round" fill="none"/><ellipse cx="40" cy="53" rx="32" ry="8" fill="#4361ee" opacity=".15"/><path d="M18 48 Q32 40 46 42" stroke="#4cc9f0" stroke-width="2" opacity=".6" stroke-linecap="round"/></svg></div></div>
+  <div class="card-body"><div class="card-number">04</div><div class="card-title">Tênis Casual</div><div class="card-detail">Número 42 · Para o dia a dia</div></div>
+</div>
+
+<div class="card" data-cat="esporte" data-price="80">
+  <span class="price-badge">~R$ 80</span>
+  <div class="card-img-wrap"><img data-img="short_de_treino.jpg" class="card-img" alt="Short de Treino" onerror="var f=this.nextElementSibling;if(f){this.style.display='none';f.style.display='flex';}this.onerror=null"><div class="card-svg-fallback" style="display:none"><svg viewBox="0 0 80 80" width="80" height="80" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M20 20 L16 60 L40 60 L40 38 L40 38 L40 60 L64 60 L60 20 Z" stroke="#06d6a0" stroke-width="3" stroke-linejoin="round" fill="none"/><path d="M20 20 Q40 28 60 20" stroke="#06d6a0" stroke-width="3" stroke-linecap="round" fill="none"/></svg></div></div>
+  <div class="card-body"><div class="card-number">05</div><div class="card-title">Short de Treino</div><div class="card-detail">Tamanho G · Leve e respirável</div></div>
+</div>
+
+<div class="card has-link" data-cat="esporte" data-price="150" onclick="window.open('https://www.mercadolivre.com.br/kit-super-band-4-intensidades-odin-fit-elasticos-power-band-treino/p/MLB28706883','_blank')">
+  <span class="price-badge">~R$ 150</span>
+  <div class="card-img-wrap"><img data-img="super-band.webp" class="card-img" alt="Super Band" onerror="var f=this.nextElementSibling;if(f){this.style.display='none';f.style.display='flex';}this.onerror=null"><div class="card-svg-fallback" style="display:none"><svg viewBox="0 0 80 80" width="80" height="80" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M15 30 Q40 20 65 30" stroke="#c77dff" stroke-width="5" stroke-linecap="round" fill="none"/><path d="M15 40 Q40 30 65 40" stroke="#9b59b6" stroke-width="5" stroke-linecap="round" fill="none"/><path d="M15 50 Q40 40 65 50" stroke="#7b2d8b" stroke-width="5" stroke-linecap="round" fill="none"/><path d="M15 60 Q40 50 65 60" stroke="#5a1a6b" stroke-width="5" stroke-linecap="round" fill="none"/></svg></div></div>
+  <div class="card-body"><div class="card-number">06</div><div class="card-title">Super Band</div><div class="card-detail">Kit 4 intensidades · Odin Fit</div><div class="card-links"><a class="card-link" href="https://www.mercadolivre.com.br/kit-super-band-4-intensidades-odin-fit-elasticos-power-band-treino/p/MLB28706883" target="_blank" onclick="event.stopPropagation()">Mercado Livre <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 10L10 2M5 2h5v5"/></svg></a></div></div>
+</div>
+
+<div class="card" data-cat="esporte" data-price="1500">
+  <span class="price-badge">~R$ 1.500</span>
+  <div class="card-img-wrap"><img data-img="bicicleta.jpg" class="card-img" alt="Bicicleta" onerror="var f=this.nextElementSibling;if(f){this.style.display='none';f.style.display='flex';}this.onerror=null"><div class="card-svg-fallback" style="display:none"><svg viewBox="0 0 80 80" width="80" height="80" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="22" cy="52" r="14" stroke="#2dc653" stroke-width="3"/><circle cx="58" cy="52" r="14" stroke="#2dc653" stroke-width="3"/><path d="M22 52 L36 28 L50 28 L58 52" stroke="#007f5f" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M36 28 L40 52" stroke="#007f5f" stroke-width="2" stroke-linecap="round"/><path d="M30 28 L42 28" stroke="#2dc653" stroke-width="3" stroke-linecap="round"/></svg></div></div>
+  <div class="card-body"><div class="card-number">07</div><div class="card-title">Bicicleta</div><div class="card-detail">Adoraria pedalar por aí!</div></div>
+</div>
+
+</div></div><!-- end esporte -->
+
+<!-- ══ ROUPAS ══ -->
+<div class="section-wrap" data-section="roupas">
+<div class="section-label">Roupas &amp; Dia a Dia</div>
+<div class="grid">
+
+<div class="card" data-cat="roupas" data-price="120">
+  <span class="price-badge">~R$ 120</span>
+  <div class="card-img-wrap"><img data-img="bermuda___short.jpg" class="card-img" alt="Bermuda / Short" onerror="var f=this.nextElementSibling;if(f){this.style.display='none';f.style.display='flex';}this.onerror=null"><div class="card-svg-fallback" style="display:none"><svg viewBox="0 0 80 80" width="80" height="80" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M18 22 L14 60 L38 60 L40 42 L42 60 L66 60 L62 22 Z" stroke="#ffd166" stroke-width="3" stroke-linejoin="round" fill="none"/><path d="M18 22 Q40 30 62 22" stroke="#ffd166" stroke-width="3" stroke-linecap="round" fill="none"/><path d="M26 35 Q34 32 38 36" stroke="#ef8c2d" stroke-width="1.5" opacity=".7" stroke-linecap="round"/></svg></div></div>
+  <div class="card-body"><div class="card-number">08</div><div class="card-title">Bermuda / Short</div><div class="card-detail">Para sair · Tamanho G</div></div>
+</div>
+
+<div class="card has-link" data-cat="roupas" data-price="120" onclick="window.open('https://produto.mercadolivre.com.br/MLB-2222397098-daily-t-shirt-insider-_JM','_blank')">
+  <span class="price-badge">~R$ 120</span>
+  <div class="card-img-wrap"><img data-img="t-shirt-insider.webp" class="card-img" alt="Camiseta Insider" onerror="var f=this.nextElementSibling;if(f){this.style.display='none';f.style.display='flex';}this.onerror=null"><div class="card-svg-fallback" style="display:none"><svg viewBox="0 0 80 80" width="80" height="80" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M26 16 L10 28 L18 34 L22 28 L22 64 L58 64 L58 28 L62 34 L70 28 L54 16 Q46 22 40 22 Q34 22 26 16Z" stroke="#4361ee" stroke-width="2.5" stroke-linejoin="round" fill="none"/></svg></div></div>
+  <div class="card-body"><div class="card-number">09</div><div class="card-title">Camiseta Insider</div><div class="card-detail">Ou algodão peruano C&amp;A · Tamanho G</div><div class="card-links"><a class="card-link" href="https://produto.mercadolivre.com.br/MLB-2222397098-daily-t-shirt-insider-_JM" target="_blank" onclick="event.stopPropagation()">Daily T-shirt <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 10L10 2M5 2h5v5"/></svg></a><a class="card-link alt" href="https://www.mercadolivre.com.br/camiseta-insider-tech-tshirt-masculina-adulto/up/MLBU3757103431" target="_blank" onclick="event.stopPropagation()">Tech T-shirt <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 10L10 2M5 2h5v5"/></svg></a></div></div>
+</div>
+
+<div class="card" data-cat="roupas" data-price="50">
+  <span class="price-badge">~R$ 50</span>
+  <div class="card-img-wrap"><img data-img="meias.jpg" class="card-img" alt="Meias" onerror="var f=this.nextElementSibling;if(f){this.style.display='none';f.style.display='flex';}this.onerror=null"><div class="card-svg-fallback" style="display:none"><svg viewBox="0 0 80 80" width="80" height="80" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M28 16 L28 50 Q28 65 44 65 Q58 65 58 52 L58 46 L44 46 L44 16 Z" stroke="#adb5bd" stroke-width="3" stroke-linejoin="round" fill="none"/><path d="M28 16 L44 16" stroke="#adb5bd" stroke-width="3" stroke-linecap="round"/><path d="M28 24 L44 24" stroke="#6c757d" stroke-width="2" opacity=".5"/><path d="M28 32 L44 32" stroke="#6c757d" stroke-width="2" opacity=".5"/></svg></div></div>
+  <div class="card-body"><div class="card-number">10</div><div class="card-title">Meias</div><div class="card-detail">Kit sempre bem-vindo!</div></div>
+</div>
+
+<div class="card" data-cat="roupas" data-price="60">
+  <span class="price-badge">~R$ 60</span>
+  <div class="card-img-wrap"><img data-img="cuecas.jpg" class="card-img" alt="Cuecas" onerror="var f=this.nextElementSibling;if(f){this.style.display='none';f.style.display='flex';}this.onerror=null"><div class="card-svg-fallback" style="display:none"><svg viewBox="0 0 80 80" width="80" height="80" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M14 24 L22 60 L40 44 L58 60 L66 24 Z" stroke="#4cc9f0" stroke-width="3" stroke-linejoin="round" fill="none"/><path d="M14 24 Q40 32 66 24" stroke="#4cc9f0" stroke-width="3" stroke-linecap="round" fill="none"/></svg></div></div>
+  <div class="card-body"><div class="card-number">11</div><div class="card-title">Cuecas</div><div class="card-detail">Tamanho G · Quanto mais, melhor!</div></div>
+</div>
+
+<div class="card" data-cat="roupas" data-price="150">
+  <span class="price-badge">~R$ 150</span>
+  <div class="card-img-wrap"><img data-img="pijama.jpg" class="card-img" alt="Pijama" onerror="var f=this.nextElementSibling;if(f){this.style.display='none';f.style.display='flex';}this.onerror=null"><div class="card-svg-fallback" style="display:none"><svg viewBox="0 0 80 80" width="80" height="80" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M26 16 L10 28 L18 34 L22 28 L22 48 L16 64 L30 64 L34 52 L46 52 L50 64 L64 64 L58 48 L58 28 L62 34 L70 28 L54 16 Q46 22 40 22 Q34 22 26 16Z" stroke="#8338ec" stroke-width="2.5" stroke-linejoin="round" fill="none"/><path d="M22 40 L58 40" stroke="#3a86ff" stroke-width="1.5" opacity=".5" stroke-dasharray="4 3"/></svg></div></div>
+  <div class="card-body"><div class="card-number">12</div><div class="card-title">Pijama</div><div class="card-detail">Tamanho G · Conforto total</div></div>
+</div>
+
+<div class="card" data-cat="roupas" data-price="80">
+  <span class="price-badge">~R$ 80</span>
+  <div class="card-img-wrap"><img data-img="chinelo_confortavel.jpg" class="card-img" alt="Chinelo Confortável" onerror="var f=this.nextElementSibling;if(f){this.style.display='none';f.style.display='flex';}this.onerror=null"><div class="card-svg-fallback" style="display:none"><svg viewBox="0 0 80 80" width="80" height="80" fill="none" xmlns="http://www.w3.org/2000/svg"><ellipse cx="40" cy="56" rx="28" ry="10" stroke="#fb8500" stroke-width="3" fill="none"/><path d="M20 50 Q30 30 50 36" stroke="#ffb703" stroke-width="3" stroke-linecap="round" fill="none"/><path d="M30 46 Q36 34 46 38" stroke="#fb8500" stroke-width="2" opacity=".6" stroke-linecap="round" fill="none"/></svg></div></div>
+  <div class="card-body"><div class="card-number">13</div><div class="card-title">Chinelo Confortável</div><div class="card-detail">Daqueles que salvam o dia</div></div>
+</div>
+
+<div class="card" data-cat="roupas" data-price="50">
+  <span class="price-badge">~R$ 50</span>
+  <div class="card-img-wrap"><img data-img="creme_hidratante.jpg" class="card-img" alt="Creme Hidratante" onerror="var f=this.nextElementSibling;if(f){this.style.display='none';f.style.display='flex';}this.onerror=null"><div class="card-svg-fallback" style="display:none"><svg viewBox="0 0 80 80" width="80" height="80" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="26" y="30" width="28" height="36" rx="6" stroke="#52b788" stroke-width="3" fill="none"/><rect x="30" y="22" width="20" height="10" rx="4" stroke="#52b788" stroke-width="2.5" fill="none"/><path d="M34 46 Q40 42 46 46" stroke="#2d6a4f" stroke-width="2" stroke-linecap="round" fill="none"/><circle cx="40" cy="52" r="3" fill="#52b788" opacity=".5"/></svg></div></div>
+  <div class="card-body"><div class="card-number">14</div><div class="card-title">Creme Hidratante</div><div class="card-detail">Mãos, cotovelos e tornozelos</div></div>
+</div>
+
+<div class="card" data-cat="roupas" data-price="180">
+  <span class="price-badge">~R$ 180</span>
+  <div class="card-img-wrap"><img data-img="perfume.jpg" class="card-img" alt="Perfume" onerror="var f=this.nextElementSibling;if(f){this.style.display='none';f.style.display='flex';}this.onerror=null"><div class="card-svg-fallback" style="display:none"><svg viewBox="0 0 80 80" width="80" height="80" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="26" y="32" width="28" height="36" rx="8" stroke="#e9c46a" stroke-width="3" fill="none"/><rect x="32" y="22" width="16" height="12" rx="4" stroke="#e9c46a" stroke-width="2.5" fill="none"/><rect x="36" y="16" width="8" height="8" rx="2" stroke="#f4a261" stroke-width="2" fill="none"/><path d="M30 46 Q40 40 50 46" stroke="#e9c46a" stroke-width="1.5" opacity=".6" fill="none" stroke-linecap="round"/></svg></div></div>
+  <div class="card-body"><div class="card-number">15</div><div class="card-title">Perfume</div><div class="card-detail">Masculino · ZAAD, Ferrari black, Coffee, etc.</div></div>
+</div>
+
+</div></div><!-- end roupas -->
+
+<!-- ══ TECNOLOGIA ══ -->
+<div class="section-wrap" data-section="tech">
+<div class="section-label">Tecnologia</div>
+<div class="grid">
+
+<div class="card has-link" data-cat="tech" data-price="500" onclick="window.open('https://www.mercadolivre.com.br/teclado-mecnico-aula-f99-gamer-preto-e-cinza-com-contorno-rgb-sem-fio-wireless-tri-mode-bluetooth-50-24g-usb-hotswap-layout-96-compativel-pc-notebook-mac-ideal-para-jogos-e-trabalh/p/MLB64973154','_blank')">
+  <span class="price-badge">~R$ 500</span>
+  <div class="card-img-wrap"><img data-img="teclado.webp" class="card-img" alt="Teclado Mecânico" onerror="var f=this.nextElementSibling;if(f){this.style.display='none';f.style.display='flex';}this.onerror=null"><div class="card-svg-fallback" style="display:none"><svg viewBox="0 0 80 80" width="80" height="80" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="8" y="26" width="64" height="40" rx="6" stroke="#6c6c6c" stroke-width="3" fill="none"/><rect x="14" y="32" width="8" height="7" rx="2" fill="#555"/><rect x="25" y="32" width="8" height="7" rx="2" fill="#555"/><rect x="36" y="32" width="8" height="7" rx="2" fill="#555"/><rect x="47" y="32" width="8" height="7" rx="2" fill="#555"/><rect x="58" y="32" width="8" height="7" rx="2" fill="#555"/><rect x="14" y="43" width="8" height="7" rx="2" fill="#444"/><rect x="25" y="43" width="20" height="7" rx="2" fill="#444"/><rect x="48" y="43" width="18" height="7" rx="2" fill="#444"/><rect x="22" y="54" width="36" height="7" rx="3" fill="#555"/></svg></div></div>
+  <div class="card-body"><div class="card-number">16</div><div class="card-title">Teclado Mecânico</div><div class="card-detail">AULA F99 · Sem fio Tri-Mode · RGB · Hotswap</div><div class="card-links"><a class="card-link" href="https://www.mercadolivre.com.br/teclado-mecnico-aula-f99-gamer-preto-e-cinza-com-contorno-rgb-sem-fio-wireless-tri-mode-bluetooth-50-24g-usb-hotswap-layout-96-compativel-pc-notebook-mac-ideal-para-jogos-e-trabalh/p/MLB64973154" target="_blank" onclick="event.stopPropagation()">Mercado Livre <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 10L10 2M5 2h5v5"/></svg></a><a class="card-link alt" href="https://a.co/d/0hRoOJ27" target="_blank" onclick="event.stopPropagation()">Amazon <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 10L10 2M5 2h5v5"/></svg></a></div></div>
+</div>
+
+<div class="card has-link" data-cat="tech" data-price="700" onclick="window.open('https://www.mercadolivre.com.br/mouse-gamer-sem-fio-logitech-g-pro-x-superlight-2-para-jogos/p/MLB28295187','_blank')">
+  <span class="price-badge">~R$ 700</span>
+  <div class="card-img-wrap"><img data-img="mouse.webp" class="card-img" alt="Mouse Gamer" onerror="var f=this.nextElementSibling;if(f){this.style.display='none';f.style.display='flex';}this.onerror=null"><div class="card-svg-fallback" style="display:none"><svg viewBox="0 0 80 80" width="80" height="80" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M40 15 Q22 15 20 36 L20 52 Q20 65 40 65 Q60 65 60 52 L60 36 Q58 15 40 15Z" stroke="#555" stroke-width="3" fill="none"/><path d="M40 15 L40 40" stroke="#888" stroke-width="2" stroke-linecap="round"/><path d="M26 32 Q33 28 40 30" stroke="#666" stroke-width="1.5" opacity=".7" fill="none"/><circle cx="40" cy="24" r="3" fill="#888" opacity=".5"/></svg></div></div>
+  <div class="card-body"><div class="card-number">17</div><div class="card-title">Mouse Gamer</div><div class="card-detail">Logitech G Pro X Superlight 2 · Sem fio</div><div class="card-links"><a class="card-link" href="https://www.mercadolivre.com.br/mouse-gamer-sem-fio-logitech-g-pro-x-superlight-2-para-jogos/p/MLB28295187" target="_blank" onclick="event.stopPropagation()">Mercado Livre <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 10L10 2M5 2h5v5"/></svg></a></div></div>
+</div>
+
+<div class="card" data-cat="tech" data-price="3000">
+  <span class="price-badge">~R$ 3.000</span>
+  <div class="card-img-wrap"><img data-img="notebook_ou_desktop.jpg" class="card-img" alt="Notebook ou Desktop" onerror="var f=this.nextElementSibling;if(f){this.style.display='none';f.style.display='flex';}this.onerror=null"><div class="card-svg-fallback" style="display:none"><svg viewBox="0 0 80 80" width="80" height="80" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="12" y="20" width="56" height="36" rx="4" stroke="#4361ee" stroke-width="3" fill="none"/><rect x="18" y="26" width="44" height="24" rx="2" fill="#1b1b2f"/><path d="M8 56 L72 56 L68 64 L12 64 Z" stroke="#4361ee" stroke-width="2" stroke-linejoin="round" fill="none"/><rect x="32" y="56" width="16" height="3" rx="1.5" fill="#4361ee" opacity=".4"/></svg></div></div>
+  <div class="card-body"><div class="card-number">18</div><div class="card-title">Notebook ou Desktop</div><div class="card-detail">Para trabalho e diversão</div></div>
+</div>
+
+<div class="card has-link" data-cat="tech" data-price="400" onclick="window.open('https://www.mercadolivre.com.br/controle-gamesir-cyclone-2-bundle-edition-dock-carregamento-para-pc-switch-ios-android-steam-celular-hall-effect-branco/p/MLB45861096','_blank')">
+  <span class="price-badge">~R$ 400</span>
+  <div class="card-img-wrap"><img data-img="controle.webp" class="card-img" alt="Controle para PC" onerror="var f=this.nextElementSibling;if(f){this.style.display='none';f.style.display='flex';}this.onerror=null"><div class="card-svg-fallback" style="display:none"><svg viewBox="0 0 80 80" width="80" height="80" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M16 36 Q14 52 22 58 Q30 64 36 56 L40 50 L44 56 Q50 64 58 58 Q66 52 64 36 Q62 24 54 24 L26 24 Q18 24 16 36Z" stroke="#1f7a8c" stroke-width="3" fill="none"/><path d="M30 34 L30 44 M25 39 L35 39" stroke="#4fc3f7" stroke-width="2.5" stroke-linecap="round"/><circle cx="52" cy="34" r="3" fill="#1f7a8c"/><circle cx="58" cy="40" r="3" fill="#1f7a8c"/><circle cx="46" cy="40" r="3" fill="#1f7a8c"/><circle cx="52" cy="46" r="3" fill="#1f7a8c"/></svg></div></div>
+  <div class="card-body"><div class="card-number">19</div><div class="card-title">Controle para PC</div><div class="card-detail">GameSir Cyclone 2 · PC, Switch, iOS, Android</div><div class="card-links"><a class="card-link" href="https://www.mercadolivre.com.br/controle-gamesir-cyclone-2-bundle-edition-dock-carregamento-para-pc-switch-ios-android-steam-celular-hall-effect-branco/p/MLB45861096" target="_blank" onclick="event.stopPropagation()">Mercado Livre <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 10L10 2M5 2h5v5"/></svg></a></div></div>
+</div>
+
+<div class="card" data-cat="tech" data-price="5000">
+  <span class="price-badge">~R$ 5.000</span>
+  <div class="card-img-wrap"><img data-img="ipad.jpg" class="card-img" alt="iPad" onerror="var f=this.nextElementSibling;if(f){this.style.display='none';f.style.display='flex';}this.onerror=null"><div class="card-svg-fallback" style="display:none"><svg viewBox="0 0 80 80" width="80" height="80" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="18" y="10" width="44" height="60" rx="6" stroke="#5856d6" stroke-width="3" fill="none"/><rect x="24" y="16" width="32" height="44" rx="2" fill="#1c1c1e"/><circle cx="40" cy="66" r="3" stroke="#5856d6" stroke-width="2" fill="none"/></svg></div></div>
+  <div class="card-body"><div class="card-number">20</div><div class="card-title">iPad</div><div class="card-detail">Meu sonho de consumo 😍</div></div>
+</div>
+
+<div class="card has-link" data-cat="tech" data-price="300" onclick="window.open('https://www.mercadolivre.com.br/suporte-de-braco-para-monitor-duplo-north-bayou-f160-17-a-27-cor-cinza-escuro/p/MLB39258231','_blank')">
+  <span class="price-badge">~R$ 300</span>
+  <div class="card-img-wrap"><img data-img="suporte-monitor.webp" class="card-img" alt="Suporte Articulado" onerror="var f=this.nextElementSibling;if(f){this.style.display='none';f.style.display='flex';}this.onerror=null"><div class="card-svg-fallback" style="display:none"><svg viewBox="0 0 80 80" width="80" height="80" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="18" y="14" width="44" height="30" rx="3" stroke="#4361ee" stroke-width="2.5" fill="none"/><path d="M40 44 L40 58" stroke="#4361ee" stroke-width="3" stroke-linecap="round"/><path d="M30 58 L50 58" stroke="#4361ee" stroke-width="3" stroke-linecap="round"/><path d="M40 58 L40 66" stroke="#6c6c6c" stroke-width="2.5" stroke-linecap="round"/><path d="M28 66 L52 66" stroke="#6c6c6c" stroke-width="3" stroke-linecap="round"/></svg></div></div>
+  <div class="card-body"><div class="card-number">21</div><div class="card-title">Suporte Articulado</div><div class="card-detail">Monitor · North Bayou F160</div><div class="card-links"><a class="card-link" href="https://www.mercadolivre.com.br/suporte-de-braco-para-monitor-duplo-north-bayou-f160-17-a-27-cor-cinza-escuro/p/MLB39258231" target="_blank" onclick="event.stopPropagation()">Mercado Livre <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 10L10 2M5 2h5v5"/></svg></a></div></div>
+</div>
+
+<div class="card has-link" data-cat="tech" data-price="800" onclick="window.open('https://www.mercadolivre.com.br/cmera-de-painel-de-3-canais-ddpai-z90-master-4k-para-carros/p/MLB2083649264','_blank')">
+  <span class="price-badge">~R$ 2000</span>
+  <div class="card-img-wrap"><img data-img="camera-carro.webp" class="card-img" alt="Câmera Veicular" onerror="var f=this.nextElementSibling;if(f){this.style.display='none';f.style.display='flex';}this.onerror=null"><div class="card-svg-fallback" style="display:none"><svg viewBox="0 0 80 80" width="80" height="80" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="14" y="28" width="38" height="28" rx="5" stroke="#e94560" stroke-width="3" fill="none"/><circle cx="33" cy="42" r="8" stroke="#e94560" stroke-width="2.5" fill="none"/><circle cx="33" cy="42" r="3" fill="#e94560" opacity=".5"/><path d="M52 36 L66 30 L66 54 L52 48 Z" stroke="#e94560" stroke-width="2.5" stroke-linejoin="round" fill="none"/></svg></div></div>
+  <div class="card-body"><div class="card-number">22</div><div class="card-title">Câmera Veicular</div><div class="card-detail">DDPai Z90 Master 4K · 3 canais</div><div class="card-links"><a class="card-link" href="https://www.mercadolivre.com.br/cmera-de-painel-de-3-canais-ddpai-z90-master-4k-para-carros/p/MLB2083649264" target="_blank" onclick="event.stopPropagation()">Mercado Livre <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 10L10 2M5 2h5v5"/></svg></a></div></div>
+</div>
+
+<div class="card has-link" data-cat="tech" data-price="900" onclick="window.open('https://www.mercadolivre.com.br/echo-show-8-smart-display-3-geracao-preta-amazon/up/MLBU3899897181','_blank')">
+  <span class="price-badge">~R$ 1500</span>
+  <div class="card-img-wrap"><img data-img="echo-show-8.webp" class="card-img" alt="Echo Show 8" onerror="var f=this.nextElementSibling;if(f){this.style.display='none';f.style.display='flex';}this.onerror=null"><div class="card-svg-fallback" style="display:none"><svg viewBox="0 0 80 80" width="80" height="80" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="16" y="20" width="48" height="36" rx="5" stroke="#ff9900" stroke-width="3" fill="none"/><rect x="22" y="26" width="36" height="24" rx="2" fill="#232f3e"/><path d="M28 62 L52 62" stroke="#ff9900" stroke-width="3" stroke-linecap="round"/><path d="M40 56 L40 62" stroke="#ff9900" stroke-width="2.5" stroke-linecap="round"/><circle cx="40" cy="38" r="6" stroke="#ff9900" stroke-width="2" fill="none" opacity=".6"/></svg></div></div>
+  <div class="card-body"><div class="card-number">23</div><div class="card-title">Echo Show 8</div><div class="card-detail">Amazon Alexa · Smart Display · 3ª Geração</div><div class="card-links"><a class="card-link" href="https://www.mercadolivre.com.br/echo-show-8-smart-display-3-geracao-preta-amazon/up/MLBU3899897181" target="_blank" onclick="event.stopPropagation()">Mercado Livre <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 10L10 2M5 2h5v5"/></svg></a></div></div>
+</div>
+
+<div class="card bought" data-cat="tech" data-price="60">
+  <span class="price-badge">~R$ 60</span>
+  <div class="card-img-wrap"><img data-img="capinha_s24_ultra.jpg" class="card-img" alt="Capinha S24 Ultra" onerror="var f=this.nextElementSibling;if(f){this.style.display='none';f.style.display='flex';}this.onerror=null"><div class="card-svg-fallback" style="display:none"><svg viewBox="0 0 80 80" width="80" height="80" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="22" y="8" width="36" height="64" rx="8" stroke="#6979f8" stroke-width="3" fill="none"/><rect x="26" y="14" width="28" height="52" rx="5" stroke="#6979f8" stroke-width="1.5" opacity=".4" fill="none"/><circle cx="40" cy="68" r="3" stroke="#6979f8" stroke-width="2" fill="none"/><rect x="32" y="10" width="16" height="3" rx="1.5" fill="#6979f8" opacity=".5"/></svg></div></div>
+  <div class="card-body"><div class="card-number">24</div><div class="card-title">Capinha S24 Ultra</div><div class="card-detail">Samsung Galaxy S24 Ultra · Proteção e estilo</div></div>
+</div>
+
+<div class="card has-link" data-cat="tech" data-price="1800" onclick="window.open('https://www.mercadolivre.com.br/dreame-d10-plus-gen-2-rob-aspirador-e-mopa-com-base-127v-branco/p/MLB48904538','_blank')">
+  <span class="price-badge">~R$ 2200</span>
+  <div class="card-img-wrap"><img data-img="aspirador-robo.webp" class="card-img" alt="Aspirador Robô" onerror="var f=this.nextElementSibling;if(f){this.style.display='none';f.style.display='flex';}this.onerror=null"><div class="card-svg-fallback" style="display:none"><svg viewBox="0 0 80 80" width="80" height="80" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="40" cy="42" r="26" stroke="#adb5bd" stroke-width="3" fill="none"/><circle cx="40" cy="42" r="16" stroke="#6c757d" stroke-width="2" fill="none" stroke-dasharray="5 4"/><circle cx="40" cy="42" r="5" fill="#adb5bd" opacity=".5"/><rect x="34" y="14" width="12" height="6" rx="3" fill="#adb5bd"/><circle cx="56" cy="28" r="4" stroke="#6c757d" stroke-width="2" fill="none"/></svg></div></div>
+  <div class="card-body"><div class="card-number">25</div><div class="card-title">Aspirador Robô</div><div class="card-detail">Dreame D10 Plus Gen 2 · Aspira e passa mopa</div><div class="card-links"><a class="card-link" href="https://www.mercadolivre.com.br/dreame-d10-plus-gen-2-rob-aspirador-e-mopa-com-base-127v-branco/p/MLB48904538" target="_blank" onclick="event.stopPropagation()">Mercado Livre <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 10L10 2M5 2h5v5"/></svg></a></div></div>
+</div>
+
+</div></div><!-- end tech -->
+
+<!-- ══ CASA & LAZER ══ -->
+<div class="section-wrap" data-section="casa">
+<div class="section-label">Casa &amp; Lazer</div>
+<div class="grid">
+
+<div class="card" data-cat="casa" data-price="2000">
+  <span class="price-badge">~R$ 2.300</span>
+  <div class="card-img-wrap"><img data-img="ar-condicionado.webp" class="card-img" alt="Ar Condicionado" onerror="var f=this.nextElementSibling;if(f){this.style.display='none';f.style.display='flex';}this.onerror=null"><div class="card-svg-fallback" style="display:none"><svg viewBox="0 0 80 80" width="80" height="80" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="10" y="24" width="60" height="22" rx="5" stroke="#90e0ef" stroke-width="3" fill="none"/><path d="M18 34 L62 34" stroke="#90e0ef" stroke-width="1.5" opacity=".5"/><circle cx="56" cy="30" r="4" fill="#0096c7" opacity=".5"/><path d="M20 52 Q26 64 22 70" stroke="#90e0ef" stroke-width="2" stroke-linecap="round" fill="none"/><path d="M32 52 Q38 64 34 70" stroke="#90e0ef" stroke-width="2" stroke-linecap="round" fill="none"/><path d="M44 52 Q50 64 46 70" stroke="#90e0ef" stroke-width="2" stroke-linecap="round" fill="none"/></svg></div></div>
+  <div class="card-body"><div class="card-number">26</div><div class="card-title">Ar Condicionado</div><div class="card-detail">LG Dual Inverter 16mil BTUs (Para Sala) </div><div class="card-links"><a class="card-link" href="https://www.mercadolivre.com.br/ar-condicionado-lg-dual-inverter-compact-ia-12000-btus-frio/p/MLB27145748?pdp_filters=item_id:MLB4217038139#is_advertising=true&searchVariation=MLB27145748&backend_model=search-backend&be_origin=backend&position=2&search_layout=grid&type=pad&tracking_id=ff8bd306-6b6d-41fa-a044-8900fbb9cbda&ad_domain=VQCATCORE_LST&ad_position=2&ad_click_id=MTI0NDZhYjEtODhlOC00OWRlLThmYTAtZDI1OTg5OGFhYWIx" target="_blank" onclick="event.stopPropagation()">Mercado Livre <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 10L10 2M5 2h5v5"/></svg></a></div></div>
+</div>
+
+<div class="card has-link" data-cat="casa" data-price="3500" onclick="window.open('https://www.mercadolivre.com.br/smart-tv-tcl-55-polegadas-qled-mini-led-4k-c6k-wifi-bluetooth-google-tv-4-hdmi-144hz-hdr10-55c6k/p/MLB48808732','_blank')">
+  <span class="price-badge">~R$ 3.500</span>
+  <div class="card-img-wrap"><img data-img="TV.webp" class="card-img" alt="TV Sala" onerror="var f=this.nextElementSibling;if(f){this.style.display='none';f.style.display='flex';}this.onerror=null"><div class="card-svg-fallback" style="display:none"><svg viewBox="0 0 80 80" width="80" height="80" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="8" y="16" width="64" height="42" rx="4" stroke="#4fc3f7" stroke-width="3" fill="none"/><rect x="14" y="22" width="52" height="30" rx="2" fill="#0a0a0a"/><path d="M28 58 L28 66 L52 66 L52 58" stroke="#4fc3f7" stroke-width="2.5" stroke-linejoin="round" fill="none"/><path d="M22 66 L58 66" stroke="#4fc3f7" stroke-width="3" stroke-linecap="round"/></svg></div></div>
+  <div class="card-body"><div class="card-number">27</div><div class="card-title">TV Sala</div><div class="card-detail">TCL 55" QLED 4K Mini LED · 144Hz · Google TV</div><div class="card-links"><a class="card-link" href="https://www.mercadolivre.com.br/smart-tv-tcl-55-polegadas-qled-mini-led-4k-c6k-wifi-bluetooth-google-tv-4-hdmi-144hz-hdr10-55c6k/p/MLB48808732" target="_blank" onclick="event.stopPropagation()">Mercado Livre <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 10L10 2M5 2h5v5"/></svg></a></div></div>
+</div>
+
+<div class="card" data-cat="casa" data-price="300">
+  <span class="price-badge">~R$ 300</span>
+  <div class="card-img-wrap"><img data-img="kit_churrasco.jpg" class="card-img" alt="Kit Churrasco" onerror="var f=this.nextElementSibling;if(f){this.style.display='none';f.style.display='flex';}this.onerror=null"><div class="card-svg-fallback" style="display:none"><svg viewBox="0 0 80 80" width="80" height="80" fill="none" xmlns="http://www.w3.org/2000/svg"><line x1="40" y1="10" x2="40" y2="70" stroke="#e76f51" stroke-width="3" stroke-linecap="round"/><path d="M26 20 Q40 14 54 20 Q54 36 40 40 Q26 36 26 20Z" stroke="#7b2d00" stroke-width="2.5" fill="none"/><path d="M16 56 Q28 48 40 52 Q52 48 64 56" stroke="#e76f51" stroke-width="3" stroke-linecap="round" fill="none"/></svg></div></div>
+  <div class="card-body"><div class="card-number">28</div><div class="card-title">Kit Churrasco</div><div class="card-detail">Facas, pegadores e acessórios</div></div>
+</div>
+
+<div class="card" data-cat="casa" data-price="150">
+  <span class="price-badge">~R$ 150</span>
+  <div class="card-img-wrap"><img data-img="panela_de_pedra.jpg" class="card-img" alt="Panela de Pedra" onerror="var f=this.nextElementSibling;if(f){this.style.display='none';f.style.display='flex';}this.onerror=null"><div class="card-svg-fallback" style="display:none"><svg viewBox="0 0 80 80" width="80" height="80" fill="none" xmlns="http://www.w3.org/2000/svg"><ellipse cx="40" cy="52" rx="26" ry="10" stroke="#888" stroke-width="3" fill="none"/><path d="M14 36 Q14 52 40 52 Q66 52 66 36" stroke="#666" stroke-width="3" fill="none"/><path d="M14 36 Q14 22 40 22 Q66 22 66 36" stroke="#888" stroke-width="3" fill="none"/><path d="M8 34 L14 36 M72 34 L66 36" stroke="#555" stroke-width="3" stroke-linecap="round"/></svg></div></div>
+  <div class="card-body"><div class="card-number">29</div><div class="card-title">Panela de Pedra</div><div class="card-detail">Frigideira ou kit de panelas (com frigideira)</div></div>
+</div>
+
+<div class="card" data-cat="casa" data-price="80">
+  <span class="price-badge">~R$ 80</span>
+  <div class="card-img-wrap"><img data-img="forma_de_silicone.jpg" class="card-img" alt="Forma de Silicone" onerror="var f=this.nextElementSibling;if(f){this.style.display='none';f.style.display='flex';}this.onerror=null"><div class="card-svg-fallback" style="display:none"><svg viewBox="0 0 80 80" width="80" height="80" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="10" y="28" width="60" height="30" rx="6" stroke="#c8963e" stroke-width="3" fill="none"/><ellipse cx="28" cy="43" rx="9" ry="9" stroke="#7b3f00" stroke-width="2" fill="none"/><ellipse cx="52" cy="43" rx="9" ry="9" stroke="#7b3f00" stroke-width="2" fill="none"/><path d="M37 43 L43 43" stroke="#c8963e" stroke-width="2" opacity=".5"/></svg></div></div>
+  <div class="card-body"><div class="card-number">30</div><div class="card-title">Forma de Silicone</div><div class="card-detail">Ovos de Páscoa e trufas · Kit completo</div></div>
+</div>
+
+</div></div><!-- end casa -->
+
+<div class="empty-state" id="emptyState">
+  <div style="font-size:48px">🔍</div>
+  <p>Nenhum presente encontrado com esses filtros.</p>
+</div>
+
+<!-- PIX -->
+<div class="section-label" style="margin-top:20px">Pix</div>
+<div class="pix-section">
+  <span class="pix-icon">💸</span>
+  <h2>Prefere mandar um Pix?</h2>
+  <p>Também fica ótimo! Vou investir em algo da lista com muito carinho 🙏</p>
+  <div class="pix-box">
+    <div>
+      <span class="pix-label">CPF · Chave Pix</span>
+      <span class="pix-key" id="pixKey">456.611.108-39</span>
+    </div>
+    <button class="copy-btn" onclick="copyPix()">Copiar chave</button>
+  </div>
+</div>
+
+</div><!-- end container -->
+
+<div class="footer">Feito com muito carinho 🎁 &nbsp;·&nbsp; <span>Obrigado por estar aqui!</span></div>
+<div class="copied-toast" id="toast">✓ Chave copiada!</div>
+
+<script>
+// ─────────────────────────────────────────────────────
+//  CONFIG — altere aqui para mudar o caminho das imagens
+const IMG_BASE_PATH = './imagens/';
+// ─────────────────────────────────────────────────────
+
+// Carrega imagens (sem src vazio no HTML: senão o browser dispara onerror na própria página antes deste script)
+document.querySelectorAll('img.card-img[data-img]').forEach(img => {
+  const name = (img.getAttribute('data-img') || '').trim();
+  if (!name) {
+    img.style.display = 'none';
+    const fb = img.nextElementSibling;
+    if (fb && fb.classList.contains('card-svg-fallback')) fb.style.display = 'flex';
+    return;
+  }
+  img.src = IMG_BASE_PATH + name;
+});
+
+// Badge visual para produtos comprados (marcação manual via classe `bought` no card)
+document.querySelectorAll('.card.bought').forEach(card => {
+  const wrap = card.querySelector('.card-img-wrap');
+  if (!wrap) return;
+  if (wrap.querySelector('.bought-badge')) return;
+
+  const badge = document.createElement('div');
+  badge.className = 'bought-badge';
+  badge.textContent = '✓ Comprado';
+  wrap.appendChild(badge);
+});
+
+// ── DADOS DE PREÇO ──
+const prices = Array.from(document.querySelectorAll('.card[data-price]'))
+  .map(c => parseInt(c.dataset.price));
+
+function fmt(v) {
+  return 'R$ ' + v.toLocaleString('pt-BR');
+}
+
+function updateStats(visible) {
+  const vp = visible.map(c => parseInt(c.dataset.price)).filter(Boolean);
+  document.getElementById('statTotal').textContent = visible.length;
+  if (vp.length) {
+    document.getElementById('statMin').textContent = fmt(Math.min(...vp));
+    document.getElementById('statAvg').textContent = fmt(Math.round(vp.reduce((a,b)=>a+b,0)/vp.length));
+    document.getElementById('statMax').textContent = fmt(Math.max(...vp));
+  } else {
+    ['statMin','statAvg','statMax'].forEach(id => document.getElementById(id).textContent = '—');
+  }
+}
+
+// ── FILTROS ──
+let activeCat   = 'all';
+let activePrice = 'all';
+let activeBought = 'all';
+let searchTerm  = '';
+
+function applyFilters() {
+  const cards = document.querySelectorAll('.card[data-cat]');
+  let visible = [];
+
+  cards.forEach(card => {
+    const cat   = card.dataset.cat;
+    const price = parseInt(card.dataset.price) || 0;
+    const title = card.querySelector('.card-title')?.textContent.toLowerCase() || '';
+    const detail= card.querySelector('.card-detail')?.textContent.toLowerCase() || '';
+
+    const catOk   = activeCat === 'all' || cat === activeCat;
+    const searchOk= !searchTerm || title.includes(searchTerm) || detail.includes(searchTerm);
+    const bought = card.classList.contains('bought');
+    const boughtOk = activeBought === 'all' || (activeBought === 'not' && !bought);
+    const priceOk = (() => {
+      if (activePrice === 'all')    return true;
+      if (activePrice === '0-100')  return price <= 100;
+      if (activePrice === '100-300')return price > 100 && price <= 300;
+      if (activePrice === '300-1000')return price > 300 && price <= 1000;
+      if (activePrice === '1000+')  return price > 1000;
+      return true;
+    })();
+
+    const show = catOk && priceOk && searchOk && boughtOk;
+    card.classList.toggle('hidden', !show);
+    if (show) visible.push(card);
+  });
+
+  // Mostrar/ocultar seções sem cards visíveis
+  document.querySelectorAll('.section-wrap').forEach(section => {
+    const hasVisible = section.querySelectorAll('.card:not(.hidden)').length > 0;
+    section.style.display = hasVisible ? '' : 'none';
+  });
+
+  // Empty state
+  document.getElementById('emptyState').classList.toggle('show', visible.length === 0);
+
+  // Contagem
+  const total = cards.length;
+  const rc = document.getElementById('resultsCount');
+  rc.textContent = visible.length < total
+    ? `Mostrando ${visible.length} de ${total} presentes`
+    : '';
+
+  updateStats(visible);
+}
+
+// Botões categoria
+document.querySelectorAll('[data-cat]').forEach(btn => {
+  if (!btn.classList.contains('card')) {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('[data-cat]:not(.card)').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      activeCat = btn.dataset.cat;
+      applyFilters();
+    });
+  }
+});
+
+// Botões preço
+document.querySelectorAll('[data-price]').forEach(btn => {
+  if (!btn.classList.contains('card')) {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('[data-price]:not(.card)').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      activePrice = btn.dataset.price;
+      applyFilters();
+    });
+  }
+});
+
+// Botões status (comprado / não comprado)
+document.querySelectorAll('[data-bought]').forEach(btn => {
+  if (!btn.classList.contains('card')) {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('[data-bought]:not(.card)').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      activeBought = btn.dataset.bought;
+      applyFilters();
+    });
+  }
+});
+
+// Busca
+document.getElementById('searchInput').addEventListener('input', e => {
+  searchTerm = e.target.value.toLowerCase().trim();
+  applyFilters();
+});
+
+// Init stats
+updateStats(Array.from(document.querySelectorAll('.card[data-price]')));
+
+// Pix
+function copyPix(){
+  const k = document.getElementById('pixKey').textContent;
+  navigator.clipboard.writeText(k).catch(()=>{
+    const t=document.createElement('textarea');t.value=k;
+    document.body.appendChild(t);t.select();
+    document.execCommand('copy');document.body.removeChild(t);
+  });
+  const t=document.getElementById('toast');
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2500);
+}
+</script>
+</body>
+</html>
