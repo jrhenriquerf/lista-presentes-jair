@@ -24,6 +24,41 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min
 .stat-value{font-family:'Playfair Display',serif;font-size:26px;font-weight:700;color:var(--accent);line-height:1}
 .stat-label{font-size:11px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-top:4px}
 
+/* SIZES SECTION */
+.sizes-section{max-width:1200px;margin:0 auto;padding:0 20px 48px}
+.sizes-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px;margin-bottom:14px}
+.size-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px 20px;display:flex;align-items:center;gap:14px;transition:border-color .2s}
+.size-card:hover{border-color:rgba(232,201,110,.3)}
+.size-icon{width:38px;height:38px;flex-shrink:0;display:flex;align-items:center;justify-content:center;background:rgba(232,201,110,.08);border-radius:10px}
+.size-icon svg{width:20px;height:20px}
+.size-label{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:3px}
+.size-value{font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:var(--accent);line-height:1}
+.size-sub{font-size:11px;color:var(--muted);margin-top:2px}
+.measures-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px;margin-bottom:14px}
+.measure-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px 20px}
+.measure-card-title{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--accent);margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.measure-row{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid rgba(255,255,255,.04)}
+.measure-row:last-child{border-bottom:none;padding-bottom:0}
+.measure-name{font-size:13px;color:var(--muted)}
+.measure-val{font-size:13px;font-weight:600;color:var(--text)}
+.sizes-tip{font-size:12px;color:var(--muted);text-align:center;padding-top:4px;font-style:italic}
+
+/* ACCORDION */
+.accordion{border:1px solid var(--border);border-radius:14px;overflow:hidden;margin-bottom:14px}
+.accordion-header{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;cursor:pointer;user-select:none;background:var(--card);transition:background .2s}
+.accordion-header:hover{background:var(--card2)}
+.accordion-header-left{display:flex;align-items:center;gap:10px;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--accent)}
+.accordion-header-left svg{width:16px;height:16px;opacity:.8;flex-shrink:0}
+.accordion-chevron{width:16px;height:16px;color:var(--muted);transition:transform .3s ease;flex-shrink:0}
+.accordion.open .accordion-chevron{transform:rotate(180deg)}
+.accordion-body{max-height:0;overflow:hidden;transition:max-height .35s ease}
+.accordion.open .accordion-body{max-height:600px}
+.accordion-inner{padding:16px 20px 20px;background:var(--card)}
+.measures-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px}
+.measure-card{background:var(--card2);border:1px solid var(--border);border-radius:12px;padding:16px 18px}
+.measure-card-title{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--accent);margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.measure-card-title svg{width:15px;height:15px;flex-shrink:0}
+
 /* FILTERS */
 .filters-wrap{max-width:1200px;margin:0 auto;padding:0 20px 40px}
 .filters-row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:12px}
@@ -122,6 +157,176 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min
   <div class="stat"><div class="stat-value" id="statMin">—</div><div class="stat-label">A partir de</div></div>
   <div class="stat"><div class="stat-value" id="statAvg">—</div><div class="stat-label">Média</div></div>
   <div class="stat"><div class="stat-value" id="statMax">—</div><div class="stat-label">Até</div></div>
+</div>
+
+<!-- SIZES & MEASURES -->
+<div class="sizes-section">
+  <div style="font-size:11px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--accent);margin-bottom:20px;display:flex;align-items:center;gap:12px">
+    Guia de Tamanhos
+    <span style="flex:1;height:1px;background:var(--border);display:block"></span>
+  </div>
+
+  <!-- TAMANHOS PRINCIPAIS -->
+  <div class="sizes-grid">
+
+    <div class="size-card">
+      <div class="size-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#e8c96e" stroke-width="2" stroke-linecap="round">
+          <path d="M20.38 3.46 16 2a4 4 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.57a1 1 0 0 0 .99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 0 0 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.57a2 2 0 0 0-1.34-2.23z"/>
+        </svg>
+      </div>
+      <div>
+        <div class="size-label">Camiseta</div>
+        <div class="size-value">G</div>
+        <div class="size-sub">Insider / C&A / básica</div>
+      </div>
+    </div>
+
+    <div class="size-card">
+      <div class="size-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#e8c96e" stroke-width="2" stroke-linecap="round">
+          <path d="M3 6h18M3 12h18M3 18h18"/>
+          <rect x="5" y="3" width="14" height="18" rx="2"/>
+        </svg>
+      </div>
+      <div>
+        <div class="size-label">Calça / Short</div>
+        <div class="size-value">G / 44</div>
+        <div class="size-sub">Bermuda e calça jeans</div>
+      </div>
+    </div>
+
+    <div class="size-card">
+      <div class="size-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#e8c96e" stroke-width="2" stroke-linecap="round">
+          <path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/>
+        </svg>
+      </div>
+      <div>
+        <div class="size-label">Cueca / Pijama</div>
+        <div class="size-value">G</div>
+        <div class="size-sub">Qualquer modelo</div>
+      </div>
+    </div>
+
+    <div class="size-card">
+      <div class="size-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#e8c96e" stroke-width="2" stroke-linecap="round">
+          <path d="M9 22c.55-.44 1-1.24 1-2 0-1.66-1.34-3-3-3s-3 1.34-3 3c0 .76.45 1.56 1 2h4z"/>
+          <path d="M15 22c.55-.44 1-1.24 1-2 0-1.66-1.34-3-3-3s-3 1.34-3 3c0 .76.45 1.56 1 2h4z"/>
+          <path d="M2 7L2 17L5 17"/>
+          <path d="M22 7L22 17L19 17"/>
+          <path d="M3 7h18l-2-5H5L3 7z"/>
+        </svg>
+      </div>
+      <div>
+        <div class="size-label">Tênis / Sapato</div>
+        <div class="size-value">42</div>
+        <div class="size-sub">Corrida e casual</div>
+      </div>
+    </div>
+
+    <div class="size-card">
+      <div class="size-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#e8c96e" stroke-width="2" stroke-linecap="round">
+          <path d="M3 17h18M3 17l3-7h12l3 7M3 17l-1 3h20l-1-3"/>
+          <path d="M9 10V7a3 3 0 0 1 6 0v3"/>
+        </svg>
+      </div>
+      <div>
+        <div class="size-label">Chinelo</div>
+        <div class="size-value">42</div>
+        <div class="size-sub">Qualquer modelo</div>
+      </div>
+    </div>
+
+    <div class="size-card">
+      <div class="size-icon">
+        <!-- silhueta humana -->
+        <svg viewBox="0 0 24 24" fill="none" stroke="#e8c96e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="4" r="2.5"/>
+          <path d="M8 8.5c0 0 .5 2 4 2s4-2 4-2l1.5 4.5H16l-1 7H9l-1-7H6.5L8 8.5z"/>
+        </svg>
+      </div>
+      <div>
+        <div class="size-label">Altura / Peso</div>
+        <div class="size-value">1,82m</div>
+        <div class="size-sub">103 kg</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- MEDIDAS — SANFONA -->
+  <div class="accordion" id="accordionMedidas">
+    <div class="accordion-header" onclick="toggleAccordion('accordionMedidas')">
+      <div class="accordion-header-left">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <path d="M3 6h18M3 10h18M3 14h18M3 18h18"/>
+        </svg>
+        Medidas detalhadas &amp; dicas de roupa
+      </div>
+      <svg class="accordion-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg>
+    </div>
+    <div class="accordion-body">
+      <div class="accordion-inner">
+        <div class="measures-grid">
+
+          <div class="measure-card">
+            <div class="measure-card-title">
+              <!-- corpo humano com setas de medição -->
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="4" r="2"/>
+                <path d="M9 9c0 0 .4 1.5 3 1.5S15 9 15 9l1 4h-2l-.8 6H10.8L10 13H8l1-4z"/>
+                <path d="M4 13h3M17 13h3"/>
+                <path d="M5 13l1-1M5 13l1 1M19 13l-1-1M19 13l-1 1"/>
+              </svg>
+              Medidas do Corpo
+            </div>
+            <div class="measure-row"><span class="measure-name">Tórax / Peito</span><span class="measure-val">106 cm</span></div>
+            <div class="measure-row"><span class="measure-name">Cintura</span><span class="measure-val">94 cm</span></div>
+            <div class="measure-row"><span class="measure-name">Quadril</span><span class="measure-val">104 cm</span></div>
+            <div class="measure-row"><span class="measure-name">Ombro a ombro</span><span class="measure-val">48 cm</span></div>
+            <div class="measure-row"><span class="measure-name">Manga (ombro–pulso)</span><span class="measure-val">64 cm</span></div>
+          </div>
+
+          <div class="measure-card">
+            <div class="measure-card-title">
+              <!-- camiseta / roupa -->
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M20.38 3.46L16 2a4 4 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.57a1 1 0 0 0 .99.84H6v10a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.57a2 2 0 0 0-1.34-2.23z"/>
+              </svg>
+              Referência de Roupa
+            </div>
+            <div class="measure-row"><span class="measure-name">Camiseta</span><span class="measure-val">G (GG em algumas marcas)</span></div>
+            <div class="measure-row"><span class="measure-name">Calça jeans</span><span class="measure-val">44</span></div>
+            <div class="measure-row"><span class="measure-name">Calça de elástico</span><span class="measure-val">G</span></div>
+            <div class="measure-row"><span class="measure-name">Meia</span><span class="measure-val">40–43</span></div>
+          </div>
+
+          <div class="measure-card">
+            <div class="measure-card-title">
+              <!-- lanterna -->
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M8 2h8l2 6H6L8 2z"/>
+                <path d="M6 8l1.5 12h9L18 8"/>
+                <path d="M10 12h4"/>
+                <circle cx="12" cy="16" r="1.5"/>
+              </svg>
+              Dicas Rápidas
+            </div>
+            <div class="measure-row"><span class="measure-name">Prefere tecidos</span><span class="measure-val">Algodão / Dry-fit</span></div>
+            <div class="measure-row"><span class="measure-name">Estilo</span><span class="measure-val">Básico e confortável</span></div>
+            <div class="measure-row"><span class="measure-name">Cores favoritas</span><span class="measure-val">Preto, cinza, azul</span></div>
+            <div class="measure-row"><span class="measure-name">Evitar</span><span class="measure-val">Estampas exageradas</span></div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <p class="sizes-tip">💡 Em caso de dúvida entre dois tamanhos, prefira o maior — gosto de roupas com bom caimento.</p>
 </div>
 
 <!-- FILTERS -->
@@ -533,6 +738,12 @@ document.getElementById('searchInput').addEventListener('input', e => {
 
 // Init stats
 updateStats(Array.from(document.querySelectorAll('.card[data-price]')));
+
+// Accordion
+function toggleAccordion(id) {
+  const el = document.getElementById(id);
+  el.classList.toggle('open');
+}
 
 // Pix
 function copyPix(){
