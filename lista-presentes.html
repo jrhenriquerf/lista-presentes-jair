@@ -677,7 +677,7 @@ const MONTHS_PT = ['janeiro','fevereiro','março','abril','maio','junho','julho'
 
   const today = new Date();
   const birthdayThisYear = new Date(today.getFullYear(), BIRTHDAY.month - 1, BIRTHDAY.day);
-  let turningAge = today.getFullYear() - BIRTHDAY.year;
+  let turningAge = today.getFullYear() - BIRTHDAY.year - 1; // TODO: Ajustar para 29 depois
   if (today > birthdayThisYear) turningAge += 1;
 
   ageEl.textContent = `${turningAge} anos`;
